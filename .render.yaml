@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: iron-condor-bot
+    env: python
+    repo: https://github.com/imiafamilia21-cyber/iron-condor-bot
+    plan: free
+    branch: main
+    buildCommand: ""
+    startCommand: python okx_iron_condor_demo.py
+    schedule: "0 */4 * * *"
+    envVars:
+      - key: API_KEY
+        value: 8ef705aa-745d-4763-984a-cbf22c34140b
+      - key: API_SECRET
+        value: E54D343C749D5BB40A24A2CF9DC2BADD
+      - key: PASSPHRASE
+        value: TC-iq[H^-})1
