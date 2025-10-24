@@ -1,8 +1,5 @@
-from fastapi import FastAPI
 from datetime import datetime, timezone
-import hmac, base64, hashlib, requests, json, csv
-
-app = FastAPI()
+import hmac, base64, hashlib, requests, json
 
 # 🔐 Вставь свои ключи
 API_KEY = "your_api_key"
@@ -113,7 +110,6 @@ def place_order(instId, side):
     result = send_request("POST", "/api/v5/trade/order", order)
     return result.get("code")
 
-@app.get("/run")
 def run_iron_condor():
     spot = get_eth_price()
     options = get_eth_options()
