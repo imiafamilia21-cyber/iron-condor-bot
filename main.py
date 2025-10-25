@@ -1,11 +1,26 @@
 from datetime import datetime, timezone
 import hmac, base64, hashlib, requests, json
+from fastapi import FastAPI
+from aiogram import Bot
+import asyncio
+import os
 
-# 🔐 Вставь свои ключи
+# 🔐 Переменные окружения
 API_KEY = "226434d8-393c-40de-a08b-6ceb87a184dc"
 API_SECRET = "69C3EB64C283FD2BABD9468D0975E90E"
 PASSPHRASE = "TC-iq[H^-})1"
 BASE_URL = "https://www.okx.com"
+TELEGRAM_TOKEN = os.getenv("8059438282:AAHgxgHlzVIGf-iClBtHi_QGdZSPfzeC-pY")
+CHAT_ID = os.getenv("1913932382")
+
+# 📩 Telegram-бот
+bot = Bot(token=TELEGRAM_TOKEN)
+
+async def notify(text):
+    await bot.send_message(chat_id=CHAT_ID, text=text)
+
+def send_telegram(text):
+    asyncio.run(notify(text))
 
 def get_iso_timestamp():
     return datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
@@ -85,63 +100,4 @@ def find_condor_legs(options, spot):
     inner_call = min(strikes, key=lambda x: abs(x - (spot + 50)))
     upper_call = min(strikes, key=lambda x: abs(x - (spot + 100)))
 
-    expiry = sorted(set(opt["expTime"] for opt in enriched if opt["expTime"]))[0]
-
-    legs = []
-    for strike, side, opt_type in [
-        (lower_put, "buy", "P"),
-        (inner_put, "sell", "P"),
-        (inner_call, "sell", "C"),
-        (upper_call, "buy", "C")
-    ]:
-        inst = next((opt for opt in enriched if opt["strike"] == strike and opt["optType"] == opt_type and opt["expTime"] == expiry), None)
-        if inst:
-            legs.append(inst["instId"])
-    return legs, expiry
-
-def place_order(instId, side):
-    order = {
-        "instId": instId,
-        "tdMode": "isolated",
-        "side": side,
-        "ordType": "market",
-        "sz": "0.05"
-    }
-    result = send_request("POST", "/api/v5/trade/order", order)
-    return result.get("code")
-
-def run_iron_condor():
-    spot = get_eth_price()
-    options = get_eth_options()
-    legs, expiry = find_condor_legs(options, spot)
-
-    if len(legs) != 4:
-        return {"error": "Недостаточно ликвидности или страйков"}
-
-    premium, width, max_profit, max_loss = calculate_condor_metrics(legs)
-
-    if premium == 0.0:
-        return {"error": "Премия нулевая — конструкция неликвидна"}
-
-    results = []
-    results.append({"order": "buy", "instId": legs[0], "code": place_order(legs[0], "buy")})
-    results.append({"order": "sell", "instId": legs[1], "code": place_order(legs[1], "sell")})
-    results.append({"order": "sell", "instId": legs[2], "code": place_order(legs[2], "sell")})
-    results.append({"order": "buy", "instId": legs[3], "code": place_order(legs[3], "buy")})
-
-    return {
-        "spot": spot,
-        "expiry": expiry,
-        "legs": legs,
-        "premium": premium,
-        "risk": max_loss,
-        "potential": max_profit,
-        "orders": results
-    }
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def run():
-    return run_iron_condor()
+    expiry = sorted(set(opt["expTime"] for opt in enriched if opt["expTime"]))

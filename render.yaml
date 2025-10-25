@@ -14,3 +14,8 @@ services:
         value: "69C3EB64C283FD2BABD9468D0975E90E"
       - key: PASSPHRASE
         value: "TC-iq[H^-})1"
+envVars:
+  - key: TELEGRAM_TOKEN
+    value: "8059438282:AAHgxgHlzVIGf-iClBtHi_QGdZSPfzeC-pY"
+  - key: CHAT_ID
+    value: "1913932382"
