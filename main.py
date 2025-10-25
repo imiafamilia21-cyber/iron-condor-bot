@@ -138,3 +138,10 @@ def run_iron_condor():
         "potential": max_profit,
         "orders": results
     }
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def run():
+    return run_iron_condor()
