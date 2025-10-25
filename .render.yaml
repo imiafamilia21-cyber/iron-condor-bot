@@ -7,8 +7,9 @@ services:
     startCommand: uvicorn main:app --host=0.0.0.0 --port=10000
     envVars:
       - key: API_KEY
-        value: your_api_key
+        value: "226434d8-393c-40de-a08b-6ceb87a184dc"
       - key: API_SECRET
-        value: your_api_secret
+        value: "69C3EB64C283FD2BABD9468D0975E90E"
       - key: PASSPHRASE
-        value: your_passphrase
+        value: "TC-iq[H^-})1"
+
