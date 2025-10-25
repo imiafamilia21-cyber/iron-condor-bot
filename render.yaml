@@ -2,7 +2,6 @@ services:
   - type: web
     name: iron-condor-bot
     env: python
-    pythonVersion: 3.11
     repo: https://github.com/imiafamilia21-cyber/iron-condor-bot
     branch: main
     plan: free
