@@ -2,9 +2,9 @@ from datetime import datetime, timezone
 import hmac, base64, hashlib, requests, json
 
 # 🔐 Вставь свои ключи
-API_KEY = "your_api_key"
-API_SECRET = "your_api_secret"
-PASSPHRASE = "your_passphrase"
+API_KEY = "226434d8-393c-40de-a08b-6ceb87a184dc"
+API_SECRET = "69C3EB64C283FD2BABD9468D0975E90E"
+PASSPHRASE = "TC-iq[H^-})1"
 BASE_URL = "https://www.okx.com"
 
 def get_iso_timestamp():
